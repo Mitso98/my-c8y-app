@@ -8,9 +8,11 @@ import { DeviceInfoService } from './device-info.service';
   providers: [DeviceInfoService],
 })
 export class DeviceInfoComponent implements OnInit {
+  private readonly DEVICE_ID = '1730867797';
+
   tempteratureMeasurement!: WritableSignal<TemperatureMeasuerement | undefined>;
 
-  deviceDetails!: DeviceDetails;
+  deviceDetails?: DeviceDetails;
 
   constructor(private deviceInfoService: DeviceInfoService) {}
 
@@ -19,12 +21,27 @@ export class DeviceInfoComponent implements OnInit {
     this.subscribeForTemperatureMeasurements();
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribeForTemperatureMeasurements();
+  }
+
+  private unsubscribeForTemperatureMeasurements() {
+    this.deviceInfoService.unscubscribeFromTemperatureMeasurements();
+  }
+
   private async initDeviceDetails() {
-    this.deviceDetails = await this.deviceInfoService.getDeviceDetails();
+    this.deviceDetails = await this.deviceInfoService.getDeviceDetails(
+      this.DEVICE_ID
+    );
+    console.log("temprature >> " , this.deviceDetails);
   }
 
   private subscribeForTemperatureMeasurements() {
+    console.log("subscribeForTemperatureMeasurements called >>");
     this.tempteratureMeasurement =
-      this.deviceInfoService.subscribeForTemperatureMeasurements();
+    this.deviceInfoService.subscribeForTemperatureMeasurements(
+      this.DEVICE_ID
+    );
   }
+
 }

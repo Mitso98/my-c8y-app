@@ -1,0 +1,19 @@
+{
+  "name": "Environmental Monitoring",
+  "contextPath": "environmental-monitoring",
+  "key": "environmental-monitoring",
+  "version": "1.0.0",
+  "manifestVersion": "1.0.0",
+  "author": "IoT Development Team",
+  "description": "An application for monitoring environmental parameters.",
+  "icon": {
+    "class": "fa fa-leaf"
+  },
+  "imports": [
+    {
+      "type": "application",
+      "path": "index.html",
+      "contextPath": "environmental-monitoring"
+    }
+  ]
+}

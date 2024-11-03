@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal } from '@angular/core';
+import { Component, OnDestroy, OnInit, WritableSignal } from '@angular/core';
 import { DeviceDetails, TemperatureMeasuerement } from './device-info.model';
 import { DeviceInfoService } from './device-info.service';
 
@@ -7,7 +7,7 @@ import { DeviceInfoService } from './device-info.service';
   templateUrl: 'device-info.template.html',
   providers: [DeviceInfoService],
 })
-export class DeviceInfoComponent implements OnInit {
+export class DeviceInfoComponent implements OnInit, OnDestroy {
   private readonly DEVICE_ID = '1730867797';
 
   tempteratureMeasurement!: WritableSignal<TemperatureMeasuerement | undefined>;

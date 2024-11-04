@@ -6,6 +6,7 @@ import {
   RouterModule,
 } from '@c8y/ngx-components';
 import { DeviceInfoModule } from '../device-info/device-info.module';
+import { DeviceDashboardModule } from '../device-dashboard/device-dashboard.module';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { DeviceInfoModule } from '../device-info/device-info.module';
     RouterModule.forRoot([]),
     CoreModule.forRoot(),
     DeviceInfoModule,
+    DeviceDashboardModule,
   ],
   bootstrap: [BootstrapComponent],
 })

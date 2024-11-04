@@ -1,26 +1,36 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { CoreModule, MeasurementRealtimeService, hookNavigator } from '@c8y/ngx-components';
+import {
+  CoreModule,
+  MeasurementRealtimeService,
+  hookComponent,
+} from '@c8y/ngx-components';
+import { ContextWidgetConfig } from '@c8y/ngx-components/context-dashboard';
 
 import { DeviceInfoComponent } from './device-info.component';
-import { DeviceInfoNavigationFactory } from './device-info.factory';
-
-const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'device-info',
-    pathMatch: 'full',
-  },
-  {
-    path: 'device-info',
-    component: DeviceInfoComponent,
-  },
-];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), CoreModule],
+  imports: [CoreModule],
   exports: [],
   declarations: [DeviceInfoComponent],
-  providers: [MeasurementRealtimeService, hookNavigator(DeviceInfoNavigationFactory)],
+  providers: [
+    MeasurementRealtimeService,
+    hookComponent({
+      id: 'device-info.widget',
+      label: 'Device Info Widget',
+      description: 'This is a sample widget',
+      component: DeviceInfoComponent,
+      data: {
+        settings: {
+          noNewWidgets: false,
+          ng1: {
+            options: {
+              noDeviceTarget: false,
+              groupsSelectable: false,
+            },
+          },
+        },
+      } as ContextWidgetConfig,
+    }),
+  ],
 })
 export class DeviceInfoModule {}

@@ -1,7 +1,7 @@
 <c8y-title>{{ "Device info" | translate }}</c8y-title>
 
 @if (deviceDetails) {
-<div class="card col-sm-3 p-8">
+<div class="p-8">
   <p class="legend form-block">{{ "Device details" | translate }}</p>
   <div class="form-group">
     <label>{{ "Name" | translate }}</label>
@@ -15,9 +15,10 @@
   <div class="form-group">
     <label>{{ "Temperature" | translate }}</label>
     <p class="form-control-static">
-      {{ tempteratureMeasurement()?.value ?? "-" }}
-      {{ tempteratureMeasurement()?.unit }}
+      {{ tempteratureMeasurement()?.value ?? "-" }} {{
+      tempteratureMeasurement()?.unit }}
     </p>
   </div>
+  <div style="width: 500px"><canvas id="temperature">{{chart}}</canvas></div>
 </div>
 }

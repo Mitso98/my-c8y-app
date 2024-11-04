@@ -23,6 +23,7 @@
     "@c8y/client": "1020.39.0",
     "@c8y/ngx-components": "1020.39.0",
     "@c8y/style": "1020.39.0",
+    "chart.js": "^4.4.6",
     "ngx-bootstrap": "12.0.0",
     "rxjs": "^7.4.0",
     "tslib": "^2.3.0",

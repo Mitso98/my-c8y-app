@@ -1,6 +1,6 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { DeviceDetails, TemperatureMeasuerement } from './device-info.model';
-import { InventoryService } from '@c8y/client';
+import { InventoryService,MeasurementService } from '@c8y/client';
 import { MeasurementRealtimeService } from '@c8y/ngx-components';
 import { Subscription } from 'rxjs';
 
@@ -9,13 +9,14 @@ export class DeviceInfoService {
   private temperatureMeasurement: WritableSignal<
     TemperatureMeasuerement | undefined
   > = signal(undefined);
-  private readonly TEMPERATURE_FRAGMENT = 'c8y_Temperature';
+  private readonly TEMPERATURE_FRAGMENT = 'c8y_TemperatureMeasurement.T';
   private readonly TEMPERATURE_SERIES = 'T';
   private realtimeSubscription!: Subscription;
 
   constructor(
     private inventoryService: InventoryService,
-    private measurementRealtimeService: MeasurementRealtimeService
+    private measurementRealtimeService: MeasurementRealtimeService,
+    private measurementService : MeasurementService
   ) {}
 
   async getDeviceDetails(deviceId: string): Promise<DeviceDetails | undefined> {
@@ -78,6 +79,11 @@ export class DeviceInfoService {
         error
       );
     }
+  }
+
+  async getMeasurementByAggType( params: any) {
+    const result = await this.measurementService.listSeries(params);
+    return result;
   }
 
   unscubscribeFromTemperatureMeasurements(): void {

@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "start --env": "npx ng s -u https://etisalat-egypt.cumulocity.com"
   },
   "private": true,
   "dependencies": {
@@ -25,6 +26,7 @@
     "@c8y/style": "1020.39.0",
     "chart.js": "^4.4.6",
     "ngx-bootstrap": "12.0.0",
+    "primeng": "^17.18.11",
     "rxjs": "^7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

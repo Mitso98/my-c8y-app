@@ -5,7 +5,7 @@ import {
   OnInit,
   WritableSignal,
 } from '@angular/core';
-import { DeviceDetails, TemperatureMeasuerement } from './device-info.model';
+import { DeviceDetails } from './device-info.model';
 import { DeviceInfoService } from './device-info.service';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 
@@ -18,36 +18,101 @@ Chart.register(...registerables);
 export class DeviceInfoComponent implements OnInit, OnDestroy {
   @Input() config!: { device: { id: string; name: string } };
 
-  private readonly DEVICE_ID = '1730867797';
-
-  tempteratureMeasurement!: WritableSignal<TemperatureMeasuerement | undefined>;
+  tempteratureMeasurement!: any;
 
   deviceDetails?: DeviceDetails;
 
-  public chartConfig: ChartConfiguration<'line'> = {
-    type: 'line',
-    data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [
-        {
-          label: 'My First Dataset',
-          data: [65, 59, 80, 81, 56, 55, 40],
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1,
-        },
-      ],
-    },
-  };
-
-  chart: any;
-
   constructor(private deviceInfoService: DeviceInfoService) {}
 
-  ngOnInit() {
+  data: any;
+
+  options: any;
+  dataOfChart: Record<string, TemperatureData[]> = {};
+
+  aggregationType:
+    | 'MINUTELY'
+    | 'HOURLY'
+    | 'DAILY'
+    | 'WEEKLY'
+    | 'MONTHLY'
+    | 'YEARLY' = 'MINUTELY';
+
+  async ngOnInit() {
     this.initDeviceDetails();
-    this.subscribeForTemperatureMeasurements();
-    this.chart = new Chart('temperature', this.chartConfig);
+    await this.subscribeForTemperatureMeasurements();
+
+    // Access CSS variables for styling
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue(
+      '--text-color-secondary'
+    );
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+    // Transform data into chart-friendly format
+    const labels = [];
+    const minTemperatures = [];
+    const maxTemperatures = [];
+
+    for (const [key, value] of Object.entries(this.dataOfChart)) {
+      const tempData = value as TemperatureData[]; // Assert the type of value
+
+      labels.push(new Date(key).toLocaleDateString()); // Convert to readable date format
+      minTemperatures.push(tempData[0].min);
+      maxTemperatures.push(tempData[0].max);
+    }
+
+    this.data = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Minimum Temperature',
+          data: minTemperatures,
+          fill: false,
+          borderColor: documentStyle.getPropertyValue('--blue-500'),
+          tension: 0.4,
+        },
+        {
+          label: 'Maximum Temperature',
+          data: maxTemperatures,
+          fill: false,
+          borderColor: documentStyle.getPropertyValue('--pink-500'),
+          tension: 0.4,
+        },
+      ],
+    };
+
+    this.options = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.6,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+          },
+        },
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false,
+          },
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary,
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false,
+          },
+        },
+      },
+    };
   }
 
   ngOnDestroy(): void {
@@ -59,18 +124,32 @@ export class DeviceInfoComponent implements OnInit, OnDestroy {
   }
 
   private async initDeviceDetails() {
-    console.log("initDeviceDetails >> ", this.config.device.id);
+    console.log('initDeviceDetails >> ', '3229878668');
     this.deviceDetails = await this.deviceInfoService.getDeviceDetails(
-      this.config.device.id
+      '3229878668'
     );
 
     console.log('temprature >> ', this.deviceDetails);
   }
 
-  private subscribeForTemperatureMeasurements() {
+  async subscribeForTemperatureMeasurements() {
     this.tempteratureMeasurement =
-      this.deviceInfoService.subscribeForTemperatureMeasurements(
-        this.config.device.id
-      );
+      await this.deviceInfoService.getMeasurementByAggType({
+        source: '3229878668',
+        aggregationType: 'MINUTELY',
+        series: 'c8y_TemperatureMeasurement.T',
+        dateFrom: '2022-01-01T00:00:00.000Z',
+        dateTo: '2025-01-31T00:00:00.000Z',
+      });
+    console.log(
+      'tempteratureMeasurement >> ',
+      this.tempteratureMeasurement.data.values
+    );
+    this.dataOfChart = this.tempteratureMeasurement.data.values;
   }
+}
+
+interface TemperatureData {
+  min: number;
+  max: number;
 }

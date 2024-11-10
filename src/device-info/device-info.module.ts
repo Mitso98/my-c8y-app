@@ -7,9 +7,10 @@ import {
 import { ContextWidgetConfig } from '@c8y/ngx-components/context-dashboard';
 
 import { DeviceInfoComponent } from './device-info.component';
+import { ChartModule } from 'primeng/chart';
 
 @NgModule({
-  imports: [CoreModule],
+  imports: [CoreModule,ChartModule],
   exports: [],
   declarations: [DeviceInfoComponent],
   providers: [

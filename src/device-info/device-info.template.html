@@ -1,15 +1,15 @@
 <c8y-title>{{ "Device info" | translate }}</c8y-title>
 
-@if (deviceDetails) {
+
 <div class="p-8">
   <p class="legend form-block">{{ "Device details" | translate }}</p>
   <div class="form-group">
     <label>{{ "Name" | translate }}</label>
-    <p class="form-control-static">{{ deviceDetails.name }}</p>
+    <p class="form-control-static">{{ deviceDetails?.name }}</p>
   </div>
   <div class="form-group">
     <label>{{ "Type" | translate }}</label>
-    <p class="form-control-static">{{ deviceDetails.type }}</p>
+    <p class="form-control-static">{{ deviceDetails?.type }}</p>
   </div>
   <p class="legend form-block">{{ "Measurements" | translate }}</p>
   <div class="form-group">
@@ -19,6 +19,7 @@
       tempteratureMeasurement()?.unit }}
     </p>
   </div>
-  <div style="width: 500px"><canvas id="temperature">{{chart}}</canvas></div>
+  <div class="card">
+    <p-chart type="line" [data]="data" [options]="options"/>
+  </div>
 </div>
-}
